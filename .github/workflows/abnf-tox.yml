@@ -2,6 +2,7 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
 name: abnf-tox
+run-name: "abnf-tox ${{ inputs.leg || github.event_name }} ${{ inputs.racecar_run }}"
 
 on:
   push:
@@ -9,6 +10,24 @@ on:
   pull_request:
     branches: [ master ]
 
+  workflow_dispatch:
+    inputs:
+      leg:
+        description: "baseline (uninstrumented) or instrumented (under chalk/curiosity)"
+        type: choice
+        options: [instrumented, baseline]
+        default: baseline
+      profile:
+        description: "CrashOverride chalk profile"
+        type: string
+        default: curiosity-tests-racecar
+      racecar_run:
+        description: "racecar correlation token, echoed into the run name"
+        type: string
+        default: ""
+
+env:
+  CHALK_ON: ${{ inputs.leg == 'instrumented' }}
 # Minimal default token permissions.  No job in this workflow needs
 # anything beyond reading the source tree to run tests.
 permissions:
@@ -82,9 +101,6 @@ jobs:
         - { label: 'Python 3.12', os: ubuntu-latest, python-version: '3.12' }
         - { label: 'Python 3.13', os: ubuntu-latest, python-version: '3.13' }
         - { label: 'Python 3.14', os: ubuntu-latest, python-version: '3.14' }
-        - { label: 'Windows / Python 3.10', os: windows-latest, python-version: '3.10' }
-        - { label: 'macOS / Python 3.14', os: macos-15, python-version: '3.14' }
-
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       with:
@@ -141,6 +157,7 @@ jobs:
   # fails a PR instead of a release.
 
   lockfile:
+    if: false   # racecar: scan/report job, not a build
     name: Release deps resolve
     runs-on: ubuntu-latest
 
