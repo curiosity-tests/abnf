@@ -9,7 +9,7 @@ name: Release
 on:
   push:
     tags:
-      - v*
+    - v*
 
 # Minimal default token permissions.  Publish and release jobs
 # override with the narrowest set they need (id-token for trusted
@@ -149,32 +149,19 @@ jobs:
           # — the older toolchain fails to compile.  2_28 is the
           # recommended baseline since 2023; cost is dropping glibc
           # < 2.28 support (~CentOS 7 era).
-          - label: linux-x86_64
-            runner: ubuntu-latest
-            maturin-target: x86_64-unknown-linux-gnu
-            manylinux: "2_28"
-          - label: linux-aarch64
-            runner: ubuntu-latest
-            maturin-target: aarch64-unknown-linux-gnu
-            manylinux: "2_28"
+        - label: linux-x86_64
+          runner: ubuntu-latest
+          maturin-target: x86_64-unknown-linux-gnu
+          manylinux: "2_28"
+        - label: linux-aarch64
+          runner: ubuntu-latest
+          maturin-target: aarch64-unknown-linux-gnu
+          manylinux: "2_28"
           # macos-13 is deprecated and `macos-14` is one major behind.
           # `macos-15-intel` and `macos-15` are the current GA Intel
           # and Apple Silicon labels per actions/runner-images; pin
           # explicitly rather than using `macos-latest`, which can
           # shift under us without warning.
-          - label: macos-x86_64
-            runner: macos-15-intel
-            maturin-target: x86_64-apple-darwin
-            manylinux: ""
-          - label: macos-arm64
-            runner: macos-15
-            maturin-target: aarch64-apple-darwin
-            manylinux: ""
-          - label: windows-x86_64
-            runner: windows-latest
-            maturin-target: x86_64-pc-windows-msvc
-            manylinux: ""
-
     steps:
     - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       with:
