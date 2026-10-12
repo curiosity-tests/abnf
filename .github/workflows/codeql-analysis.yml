@@ -1,12 +1,11 @@
 name: "CodeQL"
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
   pull_request:
     branches: [ master ]
-  schedule:
-    - cron: '16 23 * * 5'
 
 # Minimal workflow-level default.  The `analyze` job below overrides
 # with a broader set; any future job added without its own

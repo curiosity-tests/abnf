@@ -6,6 +6,7 @@ name: Workflow audit
 # job log and as SARIF results in the repo's Code Scanning tab.
 
 on:
+  workflow_dispatch:
   push:
     branches: [ master ]
     paths:
@@ -16,10 +17,6 @@ on:
     paths:
       - '.github/workflows/**'
       - '.github/dependabot.yml'
-  schedule:
-    # Weekly catch-all: zizmor may add new checks that the path-
-    # filtered triggers above would miss.
-    - cron: '23 11 * * 1'
 
 # Minimal workflow-level default; the job below overrides with
 # `security-events: write` for the SARIF upload step.
